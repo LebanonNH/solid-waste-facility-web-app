@@ -10,9 +10,6 @@ charges = [{'name': "Household Bag", "Unit": "Bag", "Cost": "1"},
 def home():
     return render_template('home.html', charges=charges)
 
-@app.route('/test')
-def test():
-    return render_template('barcode.html')
 
 if __name__=="__main__":
     app.run('0.0.0.0', debug=True, ssl_context='adhoc')
