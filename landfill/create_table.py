@@ -1,8 +1,8 @@
-from sqlalchemy import *
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Date, Integer, String, DateTime, Numeric
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, sessionmaker
+from conf import fees, cities
 
 engine = create_engine('sqlite:///landfill.db', echo=True)
 Base = declarative_base()
@@ -87,5 +87,20 @@ class Transactions_Fees(Base):
         self.fees_id = fees_id
         self.quantity = quantity
 
+
 # create tables
 Base.metadata.create_all(engine)
+
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+for key, value in fees.items():
+    new_fee = Fees(key, value['unit'], value['fee'])  
+    session.add(new_fee)
+session.commit()
+
+for city in cities:
+    new_city = City(city)
+    session.add(new_city)
+session.commit()
