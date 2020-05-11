@@ -2,9 +2,11 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Date, Integer, String, DateTime, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
-from landfill.conf import fees, cities
+from landfill.conf import fees, cities, db_path
+import pymysql
 
-engine = create_engine('sqlite:///landfill.db', echo=True)
+
+engine = create_engine(db_path, echo=True)
 Base = declarative_base()
  
 ########################################################################
@@ -13,12 +15,14 @@ class City(Base):
     __tablename__ = "city"
  
     id = Column(Integer, primary_key=True)
-    city_name = Column(String)
+    city_name = Column(String(40))
+    users = relationship("User", backref="city")
 
     #----------------------------------------------------------------------
     def __init__(self, city_name):
         """"""
         self.city_name = city_name
+        
 
 class User(Base):
     """"""
@@ -26,9 +30,10 @@ class User(Base):
  
     barcode = Column(Integer, primary_key=True)
     expiration_date = Column(Date)
-    first_name = Column(String)
-    last_name = Column(String)
-    city_id = Column(String, ForeignKey("city.id"))
+    first_name = Column(String(40))
+    last_name = Column(String(40))
+    city_id = Column(Integer, ForeignKey("city.id"))
+    transactions = relationship("Transactions")
 
     #----------------------------------------------------------------------
     def __init__(self, barcode, expiration_date, first_name, last_name, city_id):
@@ -45,9 +50,10 @@ class Fees(Base):
     __tablename__ = "fees"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    unit_of_measure = Column(String)
+    name = Column(String(40))
+    unit_of_measure = Column(String(40))
     fees_per_unit = Column(Numeric)
+    fees = relationship("Transactions_Fees")
 
     #----------------------------------------------------------------------
     def __init__(self, name, unit_of_measure, fees_per_unit):
@@ -64,6 +70,7 @@ class Transactions(Base):
     id = Column(Integer, primary_key=True)
     barcode = Column(Integer, ForeignKey("user.barcode"))
     transaction_timestamp = Column(DateTime)
+    fees = relationship("Transactions_Fees")
 
     #----------------------------------------------------------------------
     def __init__(self, barcode, transaction_timestamp):

@@ -15,7 +15,7 @@ fees = {"commercial": {"fee": 75.00, "unit": "ton"},
         "Furniture": {"fee": 9.00, "unit":"item"}, 
         "Tires": {"fee": 6.00, "unit":"tire"}, 
         "Yard Trimmings and Brush": {"fee": 10.00, "unit":"ton"}, 
-        "Bulk Load of Glass, Asphalt, Brick, Concrete, and Mixed Aggregate": {"fee": 30.00, "unit":"ton"}, 
+        "Bulk Load of Mixed Aggregate": {"fee": 30.00, "unit":"ton"}, 
         "Electronic Waste - Monitors and TVs": {"fee": 15.00, "unit":"item"}, 
         "Electronic Waste - CRTs larger than 27in": {"fee": 0.25, "unit":"lb"}, 
         "Electronic Waste - Solar Panels": {"fee": 24.00, "unit":"panel"}, 
@@ -25,7 +25,7 @@ fees = {"commercial": {"fee": 75.00, "unit": "ton"},
         "Compact Fluorescent Lamps (CFLs)": {"fee": 0.60, "unit":"each"}, 
         "Cover Materials": {"fee": 10.00, "unit":"ton"}, 
         "Food Waste": {"fee": 50.00, "unit":"ton"}, 
-        "Pressurized Tanks - Fire Exteinguishers and Propane Tanks": {"fee": 12.00, "unit":"tank"}, 
+        "Pressurized Tanks": {"fee": 12.00, "unit":"tank"}, 
         "Small Pressurized Tanks": {"fee": 1.50, "unit":"each"} 
     }
 
