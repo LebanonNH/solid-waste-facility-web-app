@@ -14,6 +14,7 @@ mccabe==0.6.1
 pathtools==0.1.2
 pycparser==2.20
 pylint==2.5.0
+PyMySQL==0.9.3
 pyOpenSSL==19.1.0
 python-dotenv==0.13.0
 six==1.14.0

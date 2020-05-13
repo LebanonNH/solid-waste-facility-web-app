@@ -1,21 +1,32 @@
 {% extends "layout.html" %}
 {% block Content %}
-<form>
-  <div class="form-group">
-      <input id="barcode" class="form-control" type="text" />
-      <label for="barcode">Barcode:</label>
-    <small id="barcodeHelp" class="form-text text-muted">Capture the barcode of the landfill license</small>
-  </div>
-  {% for charge in charges %}
-    <div class="form-row">
-      <div class="col">
-        <label for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }} per {{ charge.unit_of_measure.upper() }}</label>
-      </div>
-      <div class="col">
-        <input class='form-control' type="number" id="charge-{{charge.name|replace(' ','-')}}">
-      </div>
+{{ form.hidden_tag() }}
+
+<form method="post" action="{{ url_for('home')}}">
+{{ form.csrf_token }}
+<div class="form-group">
+    {{ form.barcode.label(class="form-control-label")}}
+    {{ form.barcode(class="form-control")}}
+    {% for error in form.barcode.errors %}
+      <span class="warn">{{ error }}</span>
+    {% endfor %}
+</div>
+<div class='container'>
+{% for charge in charges %}
+  <div class="form-row">
+    <div class="col text-center">
+      <label for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }} per {{ charge.unit_of_measure.upper() }}</label>
     </div>
-  {% endfor %}
-  <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="col">
+      <i class="fa fa-arrow-up"></i>
+      <input class='form-control text-center' type="number" name="{{charge.id}}" id="charge-{{charge.name|replace(' ','-')}}">
+      <i class="fa fa-arrow-down"></i>
+    </div>
+  </div>
+{% endfor %}
+{{form.submit(class='btn btn-primary')}}
+</div> 
 </form>
+
+<script src="{{ url_for('static', filename='js/buttons.js') }}"></script>
 {% endblock Content %}

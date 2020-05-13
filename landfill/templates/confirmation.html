@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block Content %}
+<h1 class="text-center">{{ user.first_name }} {{ user.last_name }}</h1>
+<p>City: {{ user.city.city_name }}</p>
+<p>Barcode: {{user.barcode }}</p>
+<p>Expires: {{user.expiration_date.strftime("%m-%d-%Y") }}</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Charge Type</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Sub-Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for id, fee in fees.items() %}
+            <tr>
+                <td>
+                    {{ fee.fee.name.upper() }} 
+                </td>
+                <td>
+                    {{ fee.qty }} 
+                </td>
+                <td>
+                    ${{ '{0:0.2f}'.format(fee.total) }}
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>
+            </td>
+            <td>
+                <strong>Grand Total</strong>
+            </td>
+            <td>
+                ${{ '{0:0.2f}'.format(grand_total) }}
+            </td>
+            <p></p>
+        </tr>
+    </tbody>
+</table>
+<form class="form", method="post", action="{{ url_for('confirmation') }}">
+  <!-- <div class="form-group">
+      <input id="barcode" class="form-control" type="text" />
+      <label for="barcode">Barcode:</label>
+    <small id="barcodeHelp" class="form-text text-muted">Capture the barcode of the landfill license</small>
+  </div>
+  {% for charge in charges %}
+    <div class="form-row">
+      <div class="col">
+        <label for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }} per {{ charge.unit_of_measure.upper() }}</label>
+      </div>
+      <div class="col">
+        <input class='form-control' type="number" id="charge-{{charge.name|replace(' ','-')}}">
+      </div>
+    </div>
+  {% endfor %} -->
+  <button type="submit" class="btn btn-primary">Confirm Transaction</button>
+</form>
+{% endblock Content %}

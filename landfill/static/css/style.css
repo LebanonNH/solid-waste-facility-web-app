@@ -1,0 +1,13 @@
+div.form-row label {
+    margin-top: 4rem
+}
+div.form-row input.form-control {
+    width: 5rem;
+    height: 2.5rem;
+}
+
+div.form-row i {
+    font-size: 3rem;
+    margin-left: 1rem;
+    height: 1rem;
+}
