@@ -1,115 +1,65 @@
-from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Date, BigInteger, Integer, String, DateTime, Numeric
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref, sessionmaker
-from landfill.conf import fees, cities, db_path
-import pymysql
+from landfill import db
+from landfill.conf import fees, cities
+
+class City(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    city_name = db.Column(db.String(40))
+    users = db.relationship("User", backref="city")
+
+    def __repr__(self):
+        return '<City {}>'.format(self.city_name)
 
 
-engine = create_engine(db_path, echo=True)
-Base = declarative_base()
- 
-########################################################################
-class City(Base):
-    """"""
-    __tablename__ = "city"
- 
-    id = Column(Integer, primary_key=True)
-    city_name = Column(String(40))
-    users = relationship("User", backref="city")
+class User(db.Model):
+    barcode = db.Column(db.BigInteger, primary_key=True)
+    expiration_date = db.Column(db.Date)
+    first_name = db.Column(db.String(40))
+    last_name = db.Column(db.String(40))
+    city_id = db.Column(db.Integer, db.ForeignKey('city.id'))
+    transactions = db.relationship("Transactions")
 
-    #----------------------------------------------------------------------
-    def __init__(self, city_name):
-        """"""
-        self.city_name = city_name
-        
-
-class User(Base):
-    """"""
-    __tablename__ = "user"
- 
-    barcode = Column(BigInteger, primary_key=True)
-    expiration_date = Column(Date)
-    first_name = Column(String(40))
-    last_name = Column(String(40))
-    city_id = Column(Integer, ForeignKey("city.id"))
-    transactions = relationship("Transactions")
-
-    #----------------------------------------------------------------------
-    def __init__(self, barcode, expiration_date, first_name, last_name, city_id):
-        """"""
-        self.barcode = barcode
-        self.expiration_date = expiration_date
-        self.first_name = first_name
-        self.last_name = last_name
-        self.city_id = city_id
-
-
-class Fees(Base):
-    """"""
-    __tablename__ = "fees"
- 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(40))
-    unit_of_measure = Column(String(40))
-    fees_per_unit = Column(Numeric)
-    fees = relationship("Transactions_Fees")
-
-    #----------------------------------------------------------------------
-    def __init__(self, name, unit_of_measure, fees_per_unit):
-        """"""
-        self.name = name
-        self.unit_of_measure = unit_of_measure
-        self.fees_per_unit = fees_per_unit
-
-
-class Transactions(Base):
-    """"""
-    __tablename__ = "transactions"
- 
-    id = Column(Integer, primary_key=True)
-    barcode = Column(Integer, ForeignKey("user.barcode"))
-    transaction_timestamp = Column(DateTime)
-    fees = relationship("Transactions_Fees")
-
-    #----------------------------------------------------------------------
-    def __init__(self, barcode, transaction_timestamp):
-        """"""
-        self.transaction_timestamp = transaction_timestamp
-        self.barcode = barcode
-
-class Transactions_Fees(Base):
-    """"""
-    __tablename__ = "transactions_fees"
- 
-    id = Column(Integer, primary_key=True)
-    transactions_id = Column(Integer, ForeignKey("transactions.id"))
-    fees_id = Column(Integer, ForeignKey("fees.id"))
-    quantity = Column(Integer)
+    def __repr__(self):
+        return '<User {} {}>'.format(self.first_name, self.last_name)
     
-    #----------------------------------------------------------------------
-    def __init__(self, transactions_id, fees_id, quantity):
-        """"""
-        self.transactions_id = transactions_id
-        self.fees_id = fees_id
-        self.quantity = quantity
+
+class Fees(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120))
+    unit_of_measure = db.Column(db.String(40))
+    fees_per_unit = db.Column(db.Numeric)
+    fees = db.relationship("Transactions_Fees")
+
+    def __repr__(self):
+        return '<Fee {}-{} per {}>'.format(self.name, self.fees_per_unit, self.unit_of_measure)
+
+class Transactions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    barcode = db.Column(db.BigInteger, db.ForeignKey('user.barcode'))
+    transaction_timestamp = db.Column(db.DateTime)
+    fees = db.relationship("Transactions_Fees")
+
+    def __repr__(self):
+        return '<Transaction {}-{}>'.format(self.id, self.transaction_timestamp)
 
 
-# create tables
-def create_db():
-    Base.metadata.create_all(engine)
+class Transactions_Fees(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    transactions_id = db.Column(db.Integer, db.ForeignKey('transactions.id'))
+    fees_id = db.Column(db.Integer, db.ForeignKey('fees.id'))
+    qty = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Transaction_Fees {}-{}>'.format(self.transactions_id, self.fees_id)
 
 
 def populate_data():
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
 
     for key, value in fees.items():
-        new_fee = Fees(key, value['unit'], value['fee'])  
-        session.add(new_fee)
-    session.commit()
+        new_fee = Fees(name=key, unit_of_measure=value['unit'], fees_per_unit=value['fee'])  
+        db.session.add(new_fee)
+    db.session.commit()
 
     for city in cities:
-        new_city = City(city)
-        session.add(new_city)
-    session.commit()
+        new_city = City(city_name=city)
+        db.session.add(new_city)
+    db.session.commit()

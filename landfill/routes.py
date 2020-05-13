@@ -1,9 +1,9 @@
 from flask import render_template
-from landfill import app
-from landfill.models import charges
+from landfill import app, db
+from landfill.models import Fees
 @app.route('/')
 def home():
-    return render_template('home.html', charges=charges)
+    return render_template('home.html', charges=db.session.query(Fees).all())
 
 
 if __name__=="__main__":
