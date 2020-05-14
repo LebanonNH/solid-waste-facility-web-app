@@ -11,3 +11,16 @@ div.form-row i {
     margin-left: 1rem;
     height: 1rem;
 }
+
+.submit-button {
+    position: fixed;
+    bottom: 3rem;
+    left: 0;
+    width: 100%;
+}
+
+#submit {
+    position: absolute;
+    right: 1rem;
+    overflow: none;
+}

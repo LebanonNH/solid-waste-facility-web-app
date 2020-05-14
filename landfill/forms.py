@@ -5,11 +5,11 @@ from wtforms.validators import DataRequired, Length, NumberRange, ValidationErro
 from landfill import db
 from landfill.models import User, Fees
 
-fees = db.session.query(Fees).all()
+fees = Fees.query.all()
 
 def barcode_validator(form, field):
     message = "Barcode does not exist in Database"
-    user = db.session.query(User).filter(User.barcode == field.data).first()
+    user = User.query.get(field.data)
     if not user:
         raise ValidationError(message)
 

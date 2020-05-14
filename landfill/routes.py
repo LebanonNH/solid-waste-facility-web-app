@@ -7,7 +7,7 @@ from landfill.forms import TransactionForm
 def home():
     print("requesot made to home with method {}".format(request.method))
     form = TransactionForm() 
-    charges = db.session.query(Fees).all()
+    charges = Fees.query.all()
     if form.validate_on_submit():
         print("form validated")
         data = request.form
@@ -17,11 +17,11 @@ def home():
         for key, value in data.items():
             if value:
                 if key != "barcode":
-                    fee_name = db.session.query(Fees).filter(Fees.id == key).first()
+                    fee_name = Fees.query.get(key)
                     if fee_name:
                         fees[key] = {"fee": fee_name, "qty": value, "total": fee_name.fees_per_unit * int(value)}
                 if key == "barcode":
-                    user = db.session.query(User).filter(User.barcode == value).first()
+                    user = User.query.get(value)
         grand_total = 0
         for value in fees.values():
             grand_total += value['total']
