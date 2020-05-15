@@ -2,6 +2,7 @@
 {% block Content %}
 {{ form.hidden_tag() }}
 
+<div class='container'>
 <form method="post" action="{{ url_for('home')}}">
 {{ form.csrf_token }}
 <div class="form-group">
@@ -11,24 +12,23 @@
       <span class="warn">{{ error }}</span>
     {% endfor %}
 </div>
-<div class='container'>
 {% for charge in charges %}
-  <div class="form-row">
-    <div class="col text-center">
-      <label for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }} per {{ charge.unit_of_measure.upper() }}</label>
+    <div class="form-group row">
+      <div class="col">
+        <label class="mt-5" for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }} per {{ charge.unit_of_measure.upper() }}</label>
+      </div>
+      <div class="col text-center">
+        <i class="fa fa-arrow-up mx-auto"></i>
+        <input class='form-control text-center col-4 mx-auto' type="number" name="{{charge.id}}" id="charge-{{charge.name|replace(' ','-')}}">
+        <i class="fa fa-arrow-down mx-auto"></i>
+      </div>
     </div>
-    <div class="col">
-      <i class="fa fa-arrow-up"></i>
-      <input class='form-control text-center' type="number" name="{{charge.id}}" id="charge-{{charge.name|replace(' ','-')}}">
-      <i class="fa fa-arrow-down"></i>
-    </div>
-  </div>
 {% endfor %}
-<div class="submit-button">
-{{form.submit(class='btn btn-primary')}}
+<div class="submit-button fixed-bottom text-center m-1 py-3">
+  {{form.submit(class='btn btn-lg btn-primary col-6')}}
 </div>
-</div> 
 </form>
 
 <script src="{{ url_for('static', filename='js/buttons.js') }}"></script>
+</div>
 {% endblock Content %}
