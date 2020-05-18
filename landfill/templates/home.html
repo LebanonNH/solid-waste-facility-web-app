@@ -2,25 +2,25 @@
 {% block Content %}
 {{ form.hidden_tag() }}
 
-<div class='container'>
-<form method="post" action="{{ url_for('home')}}">
+<div class='container pb-5'>
+<form class='pb-5' method="post" action="{{ url_for('home')}}">
 {{ form.csrf_token }}
 <div class="form-group">
     {{ form.barcode.label(class="form-control-label")}}
     {{ form.barcode(class="form-control")}}
     {% for error in form.barcode.errors %}
-      <span class="warn">{{ error }}</span>
+      <span class="danger">{{ error }}</span>
     {% endfor %}
 </div>
 {% for charge in charges %}
     <div class="form-group row">
       <div class="col">
-        <label class="mt-5" for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }} per {{ charge.unit_of_measure.upper() }}</label>
+        <label class="mt-3" for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }}</label>
       </div>
       <div class="col text-center">
-        <i class="fa fa-arrow-up mx-auto"></i>
-        <input class='form-control text-center col-4 mx-auto' type="number" name="{{charge.id}}" id="charge-{{charge.name|replace(' ','-')}}">
-        <i class="fa fa-arrow-down mx-auto"></i>
+        <i class="fa fa-minus  mx-auto"></i>
+        <input class='form-control text-center col-4 mx-auto d-inline' type="number" name="{{charge.id}}" id="charge-{{charge.name|replace(' ','-')}}">
+        <i class="fa fa-plus mx-auto"></i>
       </div>
     </div>
 {% endfor %}

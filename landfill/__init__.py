@@ -26,6 +26,11 @@ if os.getenv('DB_USER'):
 db_url += db_path
 if db_url:
     db_url += "/" + db_name
+
+tls_cert = os.getenv('DB_TLS_CERT')
+if tls_cert:
+    db_url += "?ssl_ca=" + os.path.join(os.getcwd(), 'landfill/', tls_cert)
+
 print(db_url)
 app = Flask(__name__)
 app.config['SECRET_KEY'] =  os.getenv('SECRET_KEY')
