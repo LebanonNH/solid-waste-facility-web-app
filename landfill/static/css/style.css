@@ -5,7 +5,10 @@ div.form-row input.form-control {
     width: 5rem;
     height: 2.5rem;
 } */
-
+* {
+    font-size: 16px;
+    line-height: 1.5;
+}
 div.row i {
     font-size: 3rem;
     /* margin-left: 1rem; */

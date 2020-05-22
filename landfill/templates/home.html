@@ -6,8 +6,7 @@
 <form class='pb-5' method="post" action="{{ url_for('home')}}">
 {{ form.csrf_token }}
 <div class="form-group">
-    {{ form.barcode.label(class="form-control-label")}}
-    {{ form.barcode(class="form-control")}}
+    {{ form.barcode(class="form-control", placeholder="Barcode")}}
     {% for error in form.barcode.errors %}
       <span class="danger">{{ error }}</span>
     {% endfor %}
@@ -15,7 +14,7 @@
 {% for charge in charges %}
     <div class="form-group row">
       <div class="col">
-        <label class="mt-3" for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }}</label>
+        <label class="mt-4" for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }}</label>
       </div>
       <div class="col text-center">
         <i class="fa fa-minus  mx-auto"></i>
