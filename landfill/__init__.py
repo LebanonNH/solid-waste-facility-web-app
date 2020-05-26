@@ -1,4 +1,5 @@
 import os
+from flask_bcrypt import Bcrypt
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -6,6 +7,20 @@ from flask_wtf.csrf import CSRFProtect
 
 load_dotenv()
 
+# Set root user info for webapp
+bcrypt = Bcrypt()
+
+root_user = ""
+root_password = ""
+
+if os.getenv('ROOT_USER'):
+    root_user = os.getenv('ROOT_USER')
+
+if os.getenv('ROOT_PASSWORD'):
+    root_password = bcrypt.generate_password_hash(os.getenv('ROOT_PASSWORD')).decode('utf-8')
+
+
+# Setup DB Connection 
 db_url = os.getenv('DB_TYPE')
 db_path = os.getenv('DB_PATH')
 db_name = os.getenv('DB_NAME')
@@ -32,6 +47,8 @@ if tls_cert:
     db_url += "?ssl_ca=" + os.path.join(os.getcwd(), 'landfill/', tls_cert)
 
 print(db_url)
+
+#Setup App
 app = Flask(__name__)
 app.config['SECRET_KEY'] =  os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url

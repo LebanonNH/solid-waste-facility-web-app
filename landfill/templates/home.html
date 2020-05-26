@@ -14,7 +14,11 @@
 {% for charge in charges %}
     <div class="form-group row">
       <div class="col">
-        <label class="mt-4" for="charge-{{charge.name|replace(' ','-')}}">{{ charge.name.upper() }}</label>
+        <label class="mt-4" for="charge-{{charge.name|replace(' ','-')}}">
+          {% if charge.unit_of_measure %} 
+           {{ charge.unit_of_measure }} of
+          {% endif %}
+          {{ charge.name.upper() }}</label>
       </div>
       <div class="col text-center">
         <i class="fa fa-minus  mx-auto"></i>
