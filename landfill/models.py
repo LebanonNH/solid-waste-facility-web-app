@@ -1,5 +1,6 @@
 from landfill import db, root_user, root_password
 from landfill.conf import fees, cities
+from flask_login import UserMixin
 
 class City(db.Model):
     __tablename__ = "city"
@@ -69,7 +70,7 @@ class Transactions_Fees(db.Model):
         return '<Transaction_Fees {}-{}>'.format(self.transactions_id, self.fees_id)
 
 
-class Employee(db.Model):
+class Employee(db.Model, UserMixin):
 
     __tablename__ = "employees"
 

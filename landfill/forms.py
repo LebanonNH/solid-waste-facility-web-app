@@ -13,9 +13,10 @@ def barcode_validator(form, field):
     if not user:
         raise ValidationError(message)
 
-class SigninForm(FlaskForm):
+class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
 
 class TransactionForm(FlaskForm):
     barcode = IntegerField('barcode', validators=[DataRequired(), barcode_validator])

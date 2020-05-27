@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager
 
 load_dotenv()
 
@@ -54,4 +55,9 @@ app.config['SECRET_KEY'] =  os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 db = SQLAlchemy(app)
 
+#setup login manager
+login_manager = LoginManager(app)
+
+
 from landfill import routes
+login_manager.unauthorized_handler(routes.login)

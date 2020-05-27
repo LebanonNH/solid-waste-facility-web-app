@@ -1,11 +1,18 @@
 import datetime
 import math
-from flask import render_template, request, redirect, flash, url_for
-from landfill import app, db
-from landfill.models import Fees, User, Transactions, Transactions_Fees
-from landfill.forms import TransactionForm
+from flask import abort, render_template, request, redirect, flash, url_for
+from flask_login import login_user, logout_user, login_required
+from landfill import app, db, login_manager, bcrypt
+from landfill.models import Employee, Fees, User, Transactions, Transactions_Fees
+from landfill.forms import TransactionForm, LoginForm
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Employee.query.get(user_id)
 
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def home():
     print("request made to home with method {}".format(request.method))
     form = TransactionForm() 
@@ -47,6 +54,30 @@ def confirmation():
     db.session.commit()
     flash("Transaction added to the database")
     return redirect(url_for('home'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        print(f"looking for {form.username.data}")
+        employee = Employee.query.filter_by(username=form.username.data).first()
+        if employee and bcrypt.check_password_hash(employee.password, form.password.data):
+            print(f"found employee {employee.username}")
+            login_user(employee)
+
+            flash('Logged in successfully.')
+
+            return redirect(url_for('home'))
+        else:
+            flash("Please check your username and password", "alert-warn")
+            return redirect(url_for('login'))
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 
 if __name__=="__main__":
     app.run('0.0.0.0', debug=True, ssl_context='adhoc')
