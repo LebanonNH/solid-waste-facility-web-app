@@ -1,21 +1,26 @@
 {% extends "layout.html" %}
 {% block Content %}
-<form class='pb-5' method="post" action="{{ url_for('login')}}">
+<div class="subheading text-center">
+  <p>Transaction System</p>
+</div>
+<div class="col-md-6 offset-md-3 mt-5 login-form">
+<form class='py-5' method="post" action="{{ url_for('login')}}">
 {{ form.csrf_token }}
 <div class="form-group">
-    {{ form.username.label(class="form-label")}}
     {{ form.username(class="form-control")}}
+    {{ form.username.label(class="form-label")}}
     {% for error in form.username.errors %}
       <span class="danger">{{ error }}</span>
     {% endfor %}
 </div>
 <div class="form-group">
-    {{ form.password.label(class="form-label")}}
     {{ form.password(class="form-control")}}
+    {{ form.password.label(class="form-label")}}
     {% for error in form.password.errors %}
       <span class="danger">{{ error }}</span>
     {% endfor %}
 </div>
-  {{form.submit(class='btn btn-lg btn-primary')}}
+  {{form.submit(class='btn btn-lg btn-primary login-button')}}
 </form>
+</div>
 {% endblock Content %}

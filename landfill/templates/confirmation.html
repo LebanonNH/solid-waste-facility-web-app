@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block Content %}
-<h1 class="text-center">{{ user.first_name.title() }} {{ user.last_name.title() }}</h1>
+<p>Name: {{ user.first_name.title() }} {{ user.last_name.title() }}</p>
 <p>City: {{ user.city.city_name }}</p>
 <p>Barcode: {{user.barcode }}</p>
 <p>Expires: {{user.expiration_date.strftime("%m-%d-%Y") }}</p>
