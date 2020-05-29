@@ -231,3 +231,5 @@ temp/
 .venv
 .env
 *.db
+
+.vscode
