@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 COPY ./* /home/app/
 
-RUN apk install gcc 
+RUN apk add gcc 
 
 RUN pip install -r /home/app/requirements.txt
 
