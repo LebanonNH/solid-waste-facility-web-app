@@ -12,4 +12,4 @@ RUN pip install -r /home/app/requirements.txt
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-b :5000", "landfill:app"]
+CMD ["gunicorn", "-w 4", "-b :5000", "landfill:app"]
