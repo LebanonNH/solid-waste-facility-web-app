@@ -230,6 +230,7 @@ temp/
 # End of https://www.gitignore.io/api/node,flask,visualstudiocode
 .venv
 .env
+.env.swp
 *.db
 
 .vscode
