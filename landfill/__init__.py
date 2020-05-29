@@ -10,6 +10,8 @@ from flask_login import LoginManager
 
 load_dotenv()
 
+aws_secret_key_id = os.getenv("AWS_SECRET_KEY_ID")
+aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 def get_secret(secret_name, region_name="us-east-2"):
 
     session = boto3.session.Session()
