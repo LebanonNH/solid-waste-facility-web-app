@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 WORKDIR /home/app
 
-COPY ./* /home/app/
+COPY . /home/app/
 
 RUN apk add --no-cache musl-dev python3-dev openssl-dev libffi-dev gcc 
 
