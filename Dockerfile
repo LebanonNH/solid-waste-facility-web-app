@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 COPY ./* /home/app/
 
-RUN apk add gcc 
+RUN apk add --no-cache python3-dev openssl-dev libffi-dev gcc
 
 RUN pip install -r /home/app/requirements.txt
 
