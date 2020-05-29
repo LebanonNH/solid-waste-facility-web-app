@@ -80,7 +80,8 @@ if os.getenv('DB_USER'):
     if os.getenv('DB_PASS'):
         db_url += ":" + os.getenv('DB_PASS')
     else:
-        db_url += ":" + get_secret('DB_PASS', 'us-east-2')['password']
+        secrets = json.loads(get_secret('DB_PASS', 'us-east-2'))['password']
+        db_url += ":" + secrets
     db_url += "@"
 
 db_url += db_path
