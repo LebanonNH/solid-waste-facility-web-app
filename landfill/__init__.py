@@ -1,7 +1,7 @@
 import os
 import base64
 import boto3
-from boto3.exceptions import ClientError
+from botocore.exceptions import ClientError
 from flask_bcrypt import Bcrypt
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
