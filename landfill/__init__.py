@@ -1,4 +1,6 @@
 import os
+import base64
+import boto3
 from flask_bcrypt import Bcrypt
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +9,41 @@ from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 
 load_dotenv()
+
+def get_secret(secret_name, region_name="us-east-2"):
+
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'DecryptionFailureException':
+            raise e
+        elif e.response['Error']['Code'] == 'InternalServiceErrorException':
+            raise e
+        elif e.response['Error']['Code'] == 'InvalidParameterException':
+            raise e
+        elif e.response['Error']['Code'] == 'InvalidRequestException':
+            raise e
+        elif e.response['Error']['Code'] == 'ResourceNotFoundException':
+            raise e
+    else:
+        if 'SecretString' in get_secret_value_response:
+            secret = get_secret_value_response['SecretString']
+        else:
+            decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+    if secret:
+        return secret
+    elif decoded_binary_secret:
+        return decoded_binary_secret
+            
+
 
 # Set root user info for webapp
 bcrypt = Bcrypt()
@@ -37,6 +74,8 @@ if os.getenv('DB_USER'):
     db_url += os.getenv('DB_USER')
     if os.getenv('DB_PASS'):
         db_url += ":" + os.getenv('DB_PASS')
+    else:
+        db_url += ":" + get_secret('DB_PASS', 'us-east-2')
     db_url += "@"
 
 db_url += db_path
